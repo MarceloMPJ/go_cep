@@ -40,8 +40,8 @@ func (provider Correios) findByCep(chanAddressable chan Addressable) {
 
 func webserviceCorreiosURL() string {
 	urlBase := "https://webmaniabr.com/api/1/cep/%s/"
-	appKey := ""
-	appSecret := ""
+	appKey := "hhHkMEF8MOGnDFipswdjO093rb9z5rMK"
+	appSecret := "e48albDu6WG1Z7xQlIJ4AFW3Yw1smwzbXNWBqOJrDiBjYjYs"
 	queryKey := fmt.Sprintf("?app_key=%s&app_secret=%s", appKey, appSecret)
 	urlArr := []string{urlBase, queryKey}
 	return strings.Join(urlArr, "")
