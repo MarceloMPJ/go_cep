@@ -28,14 +28,18 @@ type Addressable interface {
 FindByCep is a function which receive a cep (string) and return an Addressable
 */
 func FindByCep(cep string) Addressable {
+	providers := []Provider{
+		ViaCep{cep: cep},
+		Correios{cep: cep},
+	}
+	return consultProviders(providers)
+}
+
+func consultProviders(providers []Provider) Addressable {
 	chanAddressable := make(chan Addressable)
-
-	viaCep := ViaCep{cep: cep}
-	correios := Correios{cep: cep}
-
-	go viaCep.findByCep(chanAddressable)
-	go correios.findByCep(chanAddressable)
-
+	for i := 0; i < len(providers); i++ {
+		go providers[i].findByCep(chanAddressable)
+	}
 	return <-chanAddressable
 }
 
