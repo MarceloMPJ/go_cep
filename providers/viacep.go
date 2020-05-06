@@ -6,7 +6,7 @@ import (
 
 // ViaCep is a struct used to query api of viacep
 type ViaCep struct {
-	cep string
+	Cep string
 }
 
 type addressViaCep struct {
@@ -15,22 +15,21 @@ type addressViaCep struct {
 	Cep   string `json:"cep"`
 }
 
-func (address addressViaCep) getCity() string {
-	return address.City
-}
-
-func (address addressViaCep) getState() string {
-	return address.State
-}
-
-func (address addressViaCep) getCep() string {
-	return address.Cep
-}
-
-func (provider ViaCep) findByCep(chanAddressable chan Addressable) {
-	resp := queryWebservice("https://viacep.com.br/ws/%s/json/", provider.cep)
+/*
+FindByCep is a function which receive a cep (string) and return an Addressable
+*/
+func (provider ViaCep) FindByCep(chanAddress chan Address) {
+	resp := queryWebservice("https://viacep.com.br/ws/%s/json/", provider.Cep)
 	body := convertResponseToByte(resp)
 	address := addressViaCep{}
 	json.Unmarshal(body, &address)
-	chanAddressable <- address
+	chanAddress <- converAddressViaCeptToAddress(address)
+}
+
+func converAddressViaCeptToAddress(address addressViaCep) Address {
+	return Address{
+		City:  address.City,
+		State: address.State,
+		Cep:   address.Cep,
+	}
 }

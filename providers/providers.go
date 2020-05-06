@@ -11,36 +11,36 @@ import (
 Provider is the resource used to find Address
 */
 type Provider interface {
-	findByCep(chan Addressable)
+	FindByCep(chan Address)
 }
 
 /*
-Addressable is a interface which is possible get the attributes of a address
+Address is a struct which is possible get the attributes of a address
 (city, state, cep)
 */
-type Addressable interface {
-	getCity() string
-	getState() string
-	getCep() string
+type Address struct {
+	City  string
+	State string
+	Cep   string
 }
 
 /*
 FindByCep is a function which receive a cep (string) and return an Addressable
 */
-func FindByCep(cep string) Addressable {
+func FindByCep(cep string) Address {
 	providers := []Provider{
-		ViaCep{cep: cep},
-		Correios{cep: cep},
+		ViaCep{Cep: cep},
+		Correios{Cep: cep},
 	}
 	return consultProviders(providers)
 }
 
-func consultProviders(providers []Provider) Addressable {
-	chanAddressable := make(chan Addressable)
+func consultProviders(providers []Provider) Address {
+	chanAddress := make(chan Address)
 	for i := 0; i < len(providers); i++ {
-		go providers[i].findByCep(chanAddressable)
+		go providers[i].FindByCep(chanAddress)
 	}
-	return <-chanAddressable
+	return <-chanAddress
 }
 
 func queryWebservice(urlProvider string, cep string) *http.Response {

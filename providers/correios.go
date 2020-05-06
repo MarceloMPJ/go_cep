@@ -8,7 +8,7 @@ import (
 
 // Correios is a struct used to query api of correios
 type Correios struct {
-	cep string
+	Cep string
 }
 
 type addressCorreios struct {
@@ -17,25 +17,16 @@ type addressCorreios struct {
 	Cep   string `json:"cep"`
 }
 
-func (address addressCorreios) getCity() string {
-	return address.City
-}
-
-func (address addressCorreios) getState() string {
-	return address.State
-}
-
-func (address addressCorreios) getCep() string {
-	return address.Cep
-}
-
-func (provider Correios) findByCep(chanAddressable chan Addressable) {
+/*
+FindByCep is a function which receive a cep (string) and return an Addressable
+*/
+func (provider Correios) FindByCep(chanAddress chan Address) {
 	url := webserviceCorreiosURL()
-	resp := queryWebservice(url, provider.cep)
+	resp := queryWebservice(url, provider.Cep)
 	body := convertResponseToByte(resp)
 	address := addressCorreios{}
 	json.Unmarshal(body, &address)
-	chanAddressable <- address
+	chanAddress <- convertAddressCorreiosToAddress(address)
 }
 
 func webserviceCorreiosURL() string {
@@ -45,4 +36,12 @@ func webserviceCorreiosURL() string {
 	queryKey := fmt.Sprintf("?app_key=%s&app_secret=%s", appKey, appSecret)
 	urlArr := []string{urlBase, queryKey}
 	return strings.Join(urlArr, "")
+}
+
+func convertAddressCorreiosToAddress(address addressCorreios) Address {
+	return Address{
+		City:  address.City,
+		State: address.State,
+		Cep:   address.Cep,
+	}
 }
