@@ -12,7 +12,6 @@ type ViaCep struct {
 type addressViaCep struct {
 	City  string `json:"localidade"`
 	State string `json:"uf"`
-	Cep   string `json:"cep"`
 }
 
 /*
@@ -30,6 +29,5 @@ func converAddressViaCeptToAddress(address addressViaCep) Address {
 	return Address{
 		City:  address.City,
 		State: address.State,
-		Cep:   address.Cep,
 	}
 }

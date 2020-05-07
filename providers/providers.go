@@ -21,7 +21,6 @@ Address is a struct which is possible get the attributes of a address
 type Address struct {
 	City  string
 	State string
-	Cep   string
 }
 
 /*

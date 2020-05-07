@@ -7,12 +7,12 @@ import (
 	"github.com/MarceloMPJ/go_cep/providers"
 )
 
-func TestCorreiosFindByCep(t *testing.T) {
+func TestViacepFindByCep(t *testing.T) {
 	for i := 0; i < len(testAddressTable); i++ {
 		chanAddress := make(chan providers.Address)
 
 		cep := testAddressTable[i].cep
-		correios := providers.Correios{Cep: cep}
+		correios := providers.ViaCep{Cep: cep}
 
 		go correios.FindByCep(chanAddress)
 
